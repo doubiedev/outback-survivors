@@ -1,7 +1,14 @@
 import Phaser from 'phaser';
 
+type InputKeys = {
+    W: Phaser.Input.Keyboard.Key;
+    A: Phaser.Input.Keyboard.Key;
+    S: Phaser.Input.Keyboard.Key;
+    D: Phaser.Input.Keyboard.Key;
+};
+
 export default class Player extends Phaser.Physics.Arcade.Sprite {
-    private cursors!: Phaser.Types.Input.Keyboard.CursorKeys;
+    private keys!: InputKeys;
 
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string) {
         super(scene, x, y, texture);
@@ -11,25 +18,23 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         scene.physics.add.existing(this);
 
         this.setCollideWorldBounds(true);
-        this.setBounce(0.1);
+        this.setBounce(1);
         this.setDrag(1000, 0);
 
-        // Create cursor keys
-        this.cursors = scene.input.keyboard!.createCursorKeys();
-
+        // Create custom key map
+        this.keys = scene.input.keyboard!.addKeys("W,A,S,D") as InputKeys;
     }
 
     update() {
         const speed = 200;
-        const input = {
-            left: this.cursors.left?.isDown,
-            right: this.cursors.right?.isDown,
-            up: this.cursors.up?.isDown,
-            down: this.cursors.down?.isDown,
-        };
-
         let vx = 0;
         let vy = 0;
+        const input = {
+            left: this.keys.A.isDown,
+            right: this.keys.D.isDown,
+            up: this.keys.W.isDown,
+            down: this.keys.S.isDown,
+        };
 
         if (input.left) vx -= speed;
         if (input.right) vx += speed;
