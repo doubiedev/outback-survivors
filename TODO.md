@@ -1,12 +1,12 @@
 # TODO
-- [ ] Enemy controller
+---
 - [ ] Enemy spawner
+- [ ] Enemy contact damage, player invulnerability to that enemy for x amount of time
 - [ ] Player weapons/items
 
-# IN PROGRESS
-- [ ] Player controller
+---
+- [x] Player controller
+    - [x] WASD Movement
+- [x] Enemy controller
 
-# ON HOLD
-
-# DONE
-
+---

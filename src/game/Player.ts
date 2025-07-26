@@ -8,7 +8,8 @@ type InputKeys = {
 };
 
 export default class Player extends Phaser.Physics.Arcade.Sprite {
-    private keys!: InputKeys;
+    #keys!: InputKeys;
+    hp: number;
 
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string) {
         super(scene, x, y, texture);
@@ -22,7 +23,9 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.setDrag(1000, 0);
 
         // Create custom key map
-        this.keys = scene.input.keyboard!.addKeys("W,A,S,D") as InputKeys;
+        this.#keys = scene.input.keyboard!.addKeys("W,A,S,D") as InputKeys;
+
+        this.hp = 100;
     }
 
     update() {
@@ -30,10 +33,10 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         let vx = 0;
         let vy = 0;
         const input = {
-            left: this.keys.A.isDown,
-            right: this.keys.D.isDown,
-            up: this.keys.W.isDown,
-            down: this.keys.S.isDown,
+            left: this.#keys.A.isDown,
+            right: this.#keys.D.isDown,
+            up: this.#keys.W.isDown,
+            down: this.#keys.S.isDown,
         };
 
         if (input.left) vx -= speed;

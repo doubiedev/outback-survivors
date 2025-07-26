@@ -1,11 +1,13 @@
 import { Scene } from 'phaser';
 import Player from '../Player';
+import Enemy from '../Enemy';
 
 export class Game extends Scene {
     camera: Phaser.Cameras.Scene2D.Camera;
     background: Phaser.GameObjects.Image;
 
     private player!: Player;
+    private enemy!: Enemy;
 
     constructor() {
         super('Game');
@@ -13,6 +15,7 @@ export class Game extends Scene {
 
     preload() {
         this.load.image('player', 'assets/player.png');
+        this.load.image('enemy', 'assets/enemy.png');
     }
 
     create() {
@@ -23,6 +26,7 @@ export class Game extends Scene {
         // this.background.setAlpha(0.5);
 
         this.player = new Player(this, 100, 100, 'player');
+        this.enemy = new Enemy(this, 400, 400, 'enemy', this.player);
 
         // const ground = this.physics.add.staticGroup();
         // ground.create(400, 568, 'ground').setScale(2).refreshBody();
@@ -38,5 +42,6 @@ export class Game extends Scene {
 
     update() {
         this.player.update();
+        this.enemy.update();
     }
 }
