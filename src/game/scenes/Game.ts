@@ -32,14 +32,15 @@ export class Game extends Scene {
 
         this.enemySpawner = new EnemySpawner(this as GameScene);
 
-        // BUG: Enemies can overlap into each other
         // Collision Enemy to Enemy
+        // BUG: Enemies can overlap into each other
         this.physics.add.collider(
             this.enemySpawner.enemyGroup,
             this.enemySpawner.enemyGroup,
         );
 
         // Collision Player to Enemy
+        // BUG: When enemies colliding with player, they get stuck to the player
         this.physics.add.collider(
             this.player,
             this.enemySpawner.enemyGroup,
@@ -58,6 +59,6 @@ export class Game extends Scene {
         const player = obj1 as Player;
         const enemy = obj2 as Enemy;
 
-        player.hp -= enemy.dmg;
+        player.takeDamage(enemy.dmg);
     }
 }
