@@ -1,35 +1,42 @@
 import { Scene } from 'phaser';
+import Player from '../Player';
 
-export class Game extends Scene
-{
+export class Game extends Scene {
     camera: Phaser.Cameras.Scene2D.Camera;
     background: Phaser.GameObjects.Image;
-    msg_text : Phaser.GameObjects.Text;
 
-    constructor ()
-    {
+    private player!: Player;
+
+    constructor() {
         super('Game');
     }
 
-    create ()
-    {
-        this.camera = this.cameras.main;
-        this.camera.setBackgroundColor(0x00ff00);
+    preload() {
+        this.load.image('player', 'assets/player.png');
+    }
 
-        this.background = this.add.image(512, 384, 'background');
-        this.background.setAlpha(0.5);
+    create() {
+        // this.camera = this.cameras.main;
+        // this.camera.setBackgroundColor(0x00ff00);
+        //
+        // this.background = this.add.image(512, 384, 'background');
+        // this.background.setAlpha(0.5);
 
-        this.msg_text = this.add.text(512, 384, 'Make something fun!\nand share it with us:\nsupport@phaser.io', {
-            fontFamily: 'Arial Black', fontSize: 38, color: '#ffffff',
-            stroke: '#000000', strokeThickness: 8,
-            align: 'center'
-        });
-        this.msg_text.setOrigin(0.5);
+        this.player = new Player(this, 100, 100, 'player');
 
-        this.input.once('pointerdown', () => {
+        // const ground = this.physics.add.staticGroup();
+        // ground.create(400, 568, 'ground').setScale(2).refreshBody();
+        //
+        // this.physics.add.collider(this.player, ground);
 
-            this.scene.start('GameOver');
+        // this.input.once('pointerdown', () => {
+        //
+        //     this.scene.start('GameOver');
+        //
+        // });
+    }
 
-        });
+    update() {
+        this.player.update();
     }
 }
