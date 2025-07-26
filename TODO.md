@@ -1,12 +1,13 @@
 # TODO
 ---
-- [ ] Enemy spawner
-- [ ] Enemy contact damage, player invulnerability to that enemy for x amount of time
+- [ ] Enemy contact damage, each enemy have attack timer
 - [ ] Player weapons/items
 
+
+# DONE
 ---
+- [x] Enemy spawner
+- [x] Enemy controller
 - [x] Player controller
     - [x] WASD Movement
-- [x] Enemy controller
 
----

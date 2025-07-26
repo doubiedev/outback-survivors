@@ -1,13 +1,14 @@
 import { Scene } from 'phaser';
+import { GameScene } from '../types/GameScene';
 import Player from '../Player';
-import Enemy from '../Enemy';
+import EnemySpawner from '../EnemySpawner';
 
 export class Game extends Scene {
     camera: Phaser.Cameras.Scene2D.Camera;
     background: Phaser.GameObjects.Image;
 
-    private player!: Player;
-    private enemy!: Enemy;
+    public player!: Player;
+    private enemySpawner!: EnemySpawner;
 
     constructor() {
         super('Game');
@@ -21,27 +22,18 @@ export class Game extends Scene {
     create() {
         this.camera = this.cameras.main;
         this.camera.setBackgroundColor(0x00ff00);
-
         this.background = this.add.image(512, 384, 'background');
         this.background.setAlpha(0.5);
 
         this.player = new Player(this, 100, 100, 'player');
-        this.enemy = new Enemy(this, 400, 400, 'enemy', this.player);
+        this.add.existing(this.player);
+        this.physics.add.existing(this.player);
 
-        // const ground = this.physics.add.staticGroup();
-        // ground.create(400, 568, 'ground').setScale(2).refreshBody();
-        //
-        // this.physics.add.collider(this.player, ground);
-
-        // this.input.once('pointerdown', () => {
-        //
-        //     this.scene.start('GameOver');
-        //
-        // });
+        this.enemySpawner = new EnemySpawner(this as GameScene);
     }
 
     update() {
         this.player.update();
-        this.enemy.update();
+        this.enemySpawner.update();
     }
 }

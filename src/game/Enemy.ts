@@ -1,12 +1,12 @@
 import Phaser from 'phaser';
 import Player from './Player';
+import { GameScene } from './types/GameScene';
 
 export default class Enemy extends Phaser.Physics.Arcade.Sprite {
-    private player: Player;
+    private player!: Player;
 
-    constructor(scene: Phaser.Scene, x: number, y: number, texture: string, player: Player) {
+    constructor(scene: Phaser.Scene, x: number, y: number, texture: string) {
         super(scene, x, y, texture);
-        this.player = player;
 
         // Add to scene and enable physics
         scene.add.existing(this);
@@ -14,6 +14,9 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
 
         this.setCollideWorldBounds(true);
         this.setBounce(1);
+
+        // Cast the scene to GameScene and access the player
+        this.player = (scene as GameScene).player;
     }
 
     update() {
