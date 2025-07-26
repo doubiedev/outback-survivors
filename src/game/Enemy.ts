@@ -22,7 +22,7 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
         const dy = this.player.y - this.y;
 
         const distance = Math.sqrt(dx * dx + dy * dy);
-        if (distance === 0) {
+        if (distance < 10) {
             this.setVelocity(0, 0);
             return;
         }
