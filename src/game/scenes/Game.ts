@@ -1,6 +1,7 @@
 import { Scene } from 'phaser';
 import { GameScene } from '../types/GameScene';
 import Player from '../Player';
+import Enemy from '../Enemy';
 import EnemySpawner from '../EnemySpawner';
 
 export class Game extends Scene {
@@ -30,10 +31,33 @@ export class Game extends Scene {
         this.physics.add.existing(this.player);
 
         this.enemySpawner = new EnemySpawner(this as GameScene);
+
+        // BUG: Enemies can overlap into each other
+        // Collision Enemy to Enemy
+        this.physics.add.collider(
+            this.enemySpawner.enemyGroup,
+            this.enemySpawner.enemyGroup,
+        );
+
+        // Collision Player to Enemy
+        this.physics.add.collider(
+            this.player,
+            this.enemySpawner.enemyGroup,
+            this.handlePlayerEnemyCollision,
+            undefined,
+            this
+        );
     }
 
     update() {
         this.player.update();
         this.enemySpawner.update();
+    }
+
+    private handlePlayerEnemyCollision(obj1: any, obj2: any) {
+        const player = obj1 as Player;
+        const enemy = obj2 as Enemy;
+
+        player.hp -= enemy.dmg;
     }
 }

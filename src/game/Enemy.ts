@@ -4,6 +4,7 @@ import { GameScene } from './types/GameScene';
 
 export default class Enemy extends Phaser.Physics.Arcade.Sprite {
     private player!: Player;
+    public dmg: number;
 
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string) {
         super(scene, x, y, texture);
@@ -12,11 +13,13 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
         scene.add.existing(this);
         scene.physics.add.existing(this);
 
-        this.setCollideWorldBounds(true);
+        this.setCollideWorldBounds(false);
         this.setBounce(1);
 
         // Cast the scene to GameScene and access the player
         this.player = (scene as GameScene).player;
+
+        this.dmg = 1;
     }
 
     update() {
@@ -25,10 +28,10 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
         const dy = this.player.y - this.y;
 
         const distance = Math.sqrt(dx * dx + dy * dy);
-        if (distance < 10) {
-            this.setVelocity(0, 0);
-            return;
-        }
+        // if (distance < 24) {
+        //     this.setVelocity(0, 0);
+        //     return;
+        // }
 
         const vx = (dx / distance) * speed;
         const vy = (dy / distance) * speed;
