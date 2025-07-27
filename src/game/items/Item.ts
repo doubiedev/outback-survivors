@@ -7,7 +7,7 @@ export interface StatusEffect {
     strength: number;
     duration: number; // In milliseconds
     elapsed?: number;
-};
+}
 
 export interface ItemStats {
     damage: number;
@@ -25,4 +25,3 @@ export abstract class Item extends Phaser.GameObjects.GameObject {
 
     abstract activate(): void;
 }
-

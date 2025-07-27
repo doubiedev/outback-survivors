@@ -15,7 +15,6 @@ export default class EnemySpawner {
             runChildUpdate: true,
             collideWorldBounds: true,
         }) as Phaser.Physics.Arcade.Group;
-
     }
 
     update() {
@@ -40,7 +39,9 @@ export default class EnemySpawner {
         do {
             x = Phaser.Math.Between(0, this.scene.scale.width);
             y = Phaser.Math.Between(0, this.scene.scale.height);
-        } while (Phaser.Math.Distance.Between(x, y, player.x, player.y) < minDistance);
+        } while (
+            Phaser.Math.Distance.Between(x, y, player.x, player.y) < minDistance
+        );
 
         return [x, y];
     }

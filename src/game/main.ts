@@ -20,19 +20,11 @@ const config: Phaser.Types.Core.GameConfig = {
             debug: true,
         },
     },
-    scene: [
-        Boot,
-        Preloader,
-        MainMenu,
-        MainGame,
-        GameOver
-    ]
+    scene: [Boot, Preloader, MainMenu, MainGame, GameOver],
 };
 
 const StartGame = (parent: string) => {
-
     return new Game({ ...config, parent });
-
-}
+};
 
 export default StartGame;

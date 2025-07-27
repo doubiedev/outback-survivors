@@ -31,11 +31,11 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
         this.setCollideWorldBounds(true);
         this.setDrag(1000, 0);
-        this.setImmovable(true)
+        this.setImmovable(true);
         this.setDepth(5);
 
         // Player properties
-        this.keys = scene.input.keyboard!.addKeys("W,A,S,D,SPACE") as InputKeys;
+        this.keys = scene.input.keyboard!.addKeys('W,A,S,D,SPACE') as InputKeys;
         this.hp = 10;
         this.maxHp = 10;
         this.healthBar = scene.add.graphics();
@@ -87,7 +87,12 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
         // Background (grey)
         this.healthBar.fillStyle(0x555555);
-        this.healthBar.fillRect(this.x - barWidth / 2, this.y + offsetY, barWidth, barHeight);
+        this.healthBar.fillRect(
+            this.x - barWidth / 2,
+            this.y + offsetY,
+            barWidth,
+            barHeight,
+        );
 
         // Health (red -> green)
         const healthRatio = Phaser.Math.Clamp(this.hp / this.maxHp, 0, 1);
@@ -95,12 +100,21 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             new Phaser.Display.Color(255, 0, 0), // red
             new Phaser.Display.Color(0, 255, 0), // green
             100,
-            healthRatio * 100
+            healthRatio * 100,
         );
-        const fillColor = Phaser.Display.Color.GetColor(color.r, color.g, color.b);
+        const fillColor = Phaser.Display.Color.GetColor(
+            color.r,
+            color.g,
+            color.b,
+        );
 
         this.healthBar.fillStyle(fillColor);
-        this.healthBar.fillRect(this.x - barWidth / 2, this.y + offsetY, barWidth * healthRatio, barHeight);
+        this.healthBar.fillRect(
+            this.x - barWidth / 2,
+            this.y + offsetY,
+            barWidth * healthRatio,
+            barHeight,
+        );
     }
 
     destroy(fromScene?: boolean): void {
@@ -125,7 +139,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
     addToInventory(item: Item): boolean {
         if (this.inventory.length >= this.inventoryLimit) {
-            console.warn("Inventory full!");
+            console.warn('Inventory full!');
             return false;
         }
         this.inventory.push(item);
@@ -138,4 +152,3 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         }
     }
 }
-

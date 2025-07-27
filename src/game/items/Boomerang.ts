@@ -9,7 +9,11 @@ export default class Boomerang extends Item {
     private player: Phaser.GameObjects.Sprite;
     private hitEnemies = new Set<Enemy>();
 
-    constructor(scene: Game, stats: ItemStats, player: Phaser.GameObjects.Sprite) {
+    constructor(
+        scene: Game,
+        stats: ItemStats,
+        player: Phaser.GameObjects.Sprite,
+    ) {
         super(scene, stats);
         this.player = player;
 
@@ -31,31 +35,54 @@ export default class Boomerang extends Item {
             return;
         }
 
-        const angle = Phaser.Math.Angle.Between(this.sprite.x, this.sprite.y, target.x, target.y);
+        const angle = Phaser.Math.Angle.Between(
+            this.sprite.x,
+            this.sprite.y,
+            target.x,
+            target.y,
+        );
         const velocity = scene.physics.velocityFromRotation(angle, 300);
 
         this.sprite.setVelocity(velocity.x, velocity.y);
 
         // On overlap with enemy
-        scene.physics.add.overlap(this.sprite, scene.enemySpawner.enemyGroup, (boomerangSprite, enemyObj) => {
-            const enemy = enemyObj as Enemy;
+        scene.physics.add.overlap(
+            this.sprite,
+            scene.enemySpawner.enemyGroup,
+            (boomerangSprite, enemyObj) => {
+                const enemy = enemyObj as Enemy;
 
-            if (!this.hitEnemies.has(enemy)) {
-                this.hitEnemies.add(enemy);
-                enemy.onHit(this.stats);
-            }
-        });
-
+                if (!this.hitEnemies.has(enemy)) {
+                    this.hitEnemies.add(enemy);
+                    enemy.onHit(this.stats);
+                }
+            },
+        );
 
         // In update loop
         scene.events.on('update', () => {
             if (this.returning) {
-                const angleBack = Phaser.Math.Angle.Between(this.sprite.x, this.sprite.y, this.player.x, this.player.y);
-                const velocityBack = scene.physics.velocityFromRotation(angleBack, 250);
+                const angleBack = Phaser.Math.Angle.Between(
+                    this.sprite.x,
+                    this.sprite.y,
+                    this.player.x,
+                    this.player.y,
+                );
+                const velocityBack = scene.physics.velocityFromRotation(
+                    angleBack,
+                    250,
+                );
                 this.sprite.setVelocity(velocityBack.x, velocityBack.y);
 
                 // Check for arrival
-                if (Phaser.Math.Distance.Between(this.sprite.x, this.sprite.y, this.player.x, this.player.y) < 10) {
+                if (
+                    Phaser.Math.Distance.Between(
+                        this.sprite.x,
+                        this.sprite.y,
+                        this.player.x,
+                        this.player.y,
+                    ) < 10
+                ) {
                     this.sprite.destroy();
                 }
             }
@@ -66,9 +93,14 @@ export default class Boomerang extends Item {
         let closest: Enemy | null = null;
         let minDist = Number.MAX_VALUE;
 
-        scene.enemySpawner.enemyGroup.children.iterate(child => {
+        scene.enemySpawner.enemyGroup.children.iterate((child) => {
             const enemy = child as Enemy;
-            const dist = Phaser.Math.Distance.Between(this.sprite.x, this.sprite.y, enemy.x, enemy.y);
+            const dist = Phaser.Math.Distance.Between(
+                this.sprite.x,
+                this.sprite.y,
+                enemy.x,
+                enemy.y,
+            );
             if (dist < minDist) {
                 minDist = dist;
                 closest = enemy;
@@ -79,4 +111,3 @@ export default class Boomerang extends Item {
         return closest;
     }
 }
-

@@ -34,7 +34,11 @@ export class Game extends Scene {
         this.enemySpawner = new EnemySpawner(this as GameScene);
 
         // Add boomerang to player inventory
-        const boomerang = new Boomerang(this, { damage: 1, knockback: 1 }, this.player);
+        const boomerang = new Boomerang(
+            this,
+            { damage: 1, knockback: 1 },
+            this.player,
+        );
         this.player.addToInventory(boomerang);
 
         // Collision Enemy to Enemy
@@ -51,7 +55,7 @@ export class Game extends Scene {
             this.enemySpawner.enemyGroup,
             this.handlePlayerEnemyCollision,
             undefined,
-            this
+            this,
         );
     }
 

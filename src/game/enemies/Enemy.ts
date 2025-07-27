@@ -28,12 +28,21 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
     }
 
     update(delta: number) {
-        this.updateEffects(delta)
+        this.updateEffects(delta);
 
         if (!this.isFrozen()) {
-            const angle = Phaser.Math.Angle.Between(this.x, this.y, this.player.x, this.player.y);
+            const angle = Phaser.Math.Angle.Between(
+                this.x,
+                this.y,
+                this.player.x,
+                this.player.y,
+            );
             const finalSpeed = this.getModifiedSpeed();
-            this.scene.physics.velocityFromRotation(angle, finalSpeed, this.body!.velocity);
+            this.scene.physics.velocityFromRotation(
+                angle,
+                finalSpeed,
+                this.body!.velocity,
+            );
         } else {
             this.setVelocity(0, 0);
         }
@@ -53,17 +62,26 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
 
     applyKnockback(knockback: number) {
         if (knockback > 0) {
-            const angle = Phaser.Math.Angle.Between(this.x, this.y, this.player.x, this.player.y);
-            this.scene.physics.velocityFromRotation(angle + Math.PI, knockback, this.body!.velocity);
+            const angle = Phaser.Math.Angle.Between(
+                this.x,
+                this.y,
+                this.player.x,
+                this.player.y,
+            );
+            this.scene.physics.velocityFromRotation(
+                angle + Math.PI,
+                knockback,
+                this.body!.velocity,
+            );
         }
     }
 
     addStatusEffects(effects: StatusEffect[] | undefined) {
         if (!effects) {
-            return
+            return;
         }
 
-        const newEffects = effects.map(effect => ({
+        const newEffects = effects.map((effect) => ({
             ...effect,
             elapsed: 0,
         }));
@@ -102,11 +120,11 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
     }
 
     isFrozen(): boolean {
-        return this.activeEffects.some(e => e.type === 'freeze');
+        return this.activeEffects.some((e) => e.type === 'freeze');
     }
 
     getModifiedSpeed(): number {
-        const slow = this.activeEffects.find(e => e.type === 'slow');
+        const slow = this.activeEffects.find((e) => e.type === 'slow');
         return slow ? this.speed * (1 - slow.strength) : this.speed;
     }
 }
