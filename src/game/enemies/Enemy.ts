@@ -1,6 +1,6 @@
 import Phaser from 'phaser';
-import Player from './Player';
-import { GameScene } from './types/GameScene';
+import Player from '../player/Player';
+import { GameScene } from '../types/GameScene';
 
 export default class Enemy extends Phaser.Physics.Arcade.Sprite {
     private player!: Player;

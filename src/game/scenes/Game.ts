@@ -1,8 +1,8 @@
 import { Scene } from 'phaser';
 import { GameScene } from '../types/GameScene';
-import Player from '../Player';
-import Enemy from '../Enemy';
-import EnemySpawner from '../EnemySpawner';
+import Player from '../player/Player';
+import Enemy from '../enemies/Enemy';
+import EnemySpawner from '../enemies/EnemySpawner';
 
 export class Game extends Scene {
     camera: Phaser.Cameras.Scene2D.Camera;

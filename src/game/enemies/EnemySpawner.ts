@@ -1,4 +1,4 @@
-import { GameScene } from './types/GameScene';
+import { GameScene } from '../types/GameScene';
 import Enemy from './Enemy';
 
 export default class EnemySpawner {
