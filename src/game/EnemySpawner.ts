@@ -21,10 +21,6 @@ export default class EnemySpawner {
         if (this.enemiesList.length < 5) {
             this.spawnEnemy();
         }
-
-        for (const enemy of this.enemiesList) {
-            enemy.update();
-        }
     }
 
     spawnEnemy() {

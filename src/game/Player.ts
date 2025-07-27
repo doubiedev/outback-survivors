@@ -12,6 +12,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
     public hp: number;
     public maxHp: number;
     private healthBar: Phaser.GameObjects.Graphics;
+    public speed: number;
 
     private isImmune: boolean = false;
     private immunityDuration: number = 500;
@@ -33,13 +34,13 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.hp = 10;
         this.maxHp = 10;
         this.healthBar = scene.add.graphics();
+        this.speed = 200;
 
         this.updateHealthBar();
-        console.log('Player depth', this.depth, 'Health bar depth', this.healthBar.depth);
+        // console.log('Player depth', this.depth, 'Health bar depth', this.healthBar.depth);
     }
 
     update() {
-        const speed = 200;
         let vx = 0;
         let vy = 0;
         const input = {
@@ -49,10 +50,10 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             down: this.keys.S.isDown,
         };
 
-        if (input.left) vx -= speed;
-        if (input.right) vx += speed;
-        if (input.up) vy -= speed;
-        if (input.down) vy += speed;
+        if (input.left) vx -= this.speed;
+        if (input.right) vx += this.speed;
+        if (input.up) vy -= this.speed;
+        if (input.down) vy += this.speed;
 
         // Normalize to prevent faster diagonal movement
         if (vx !== 0 && vy !== 0) {
