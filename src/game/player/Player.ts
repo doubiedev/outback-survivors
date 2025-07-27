@@ -1,10 +1,12 @@
 import Phaser from 'phaser';
+import { Item } from '../items/Item';
 
 type InputKeys = {
     W: Phaser.Input.Keyboard.Key;
     A: Phaser.Input.Keyboard.Key;
     S: Phaser.Input.Keyboard.Key;
     D: Phaser.Input.Keyboard.Key;
+    SPACE: Phaser.Input.Keyboard.Key;
 };
 
 export default class Player extends Phaser.Physics.Arcade.Sprite {
@@ -16,6 +18,9 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
 
     private isImmune: boolean = false;
     private immunityDuration: number = 500;
+
+    private inventory: Item[] = [];
+    private inventoryLimit: number = 5;
 
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string) {
         super(scene, x, y, texture);
@@ -30,7 +35,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.setDepth(5);
 
         // Player properties
-        this.keys = scene.input.keyboard!.addKeys("W,A,S,D") as InputKeys;
+        this.keys = scene.input.keyboard!.addKeys("W,A,S,D,SPACE") as InputKeys;
         this.hp = 10;
         this.maxHp = 10;
         this.healthBar = scene.add.graphics();
@@ -48,6 +53,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             right: this.keys.D.isDown,
             up: this.keys.W.isDown,
             down: this.keys.S.isDown,
+            space: this.keys.SPACE.isDown,
         };
 
         if (input.left) vx -= this.speed;
@@ -60,6 +66,11 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
             const norm = Math.sqrt(2) / 2; // ≈ 0.707
             vx *= norm;
             vy *= norm;
+        }
+
+        if (input.space) {
+            console.log('space pressed');
+            this.activateItems();
         }
 
         this.setVelocity(vx, vy);
@@ -91,6 +102,7 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         this.healthBar.fillStyle(fillColor);
         this.healthBar.fillRect(this.x - barWidth / 2, this.y + offsetY, barWidth * healthRatio, barHeight);
     }
+
     destroy(fromScene?: boolean): void {
         this.healthBar.destroy();
         super.destroy(fromScene);
@@ -111,5 +123,19 @@ export default class Player extends Phaser.Physics.Arcade.Sprite {
         });
     }
 
+    addToInventory(item: Item): boolean {
+        if (this.inventory.length >= this.inventoryLimit) {
+            console.warn("Inventory full!");
+            return false;
+        }
+        this.inventory.push(item);
+        return true;
+    }
+
+    activateItems() {
+        for (const item of this.inventory) {
+            item.activate();
+        }
+    }
 }
 

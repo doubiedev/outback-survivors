@@ -2,11 +2,11 @@ import Phaser from 'phaser';
 
 export type StatusEffectType = 'bleed' | 'burn' | 'slow' | 'freeze';
 
-export type StatusEffect = {
+export interface StatusEffect {
     type: StatusEffectType;
-    damage: number;
     strength: number;
     duration: number; // In milliseconds
+    elapsed?: number;
 };
 
 export interface ItemStats {
@@ -23,6 +23,6 @@ export abstract class Item extends Phaser.GameObjects.GameObject {
         this.stats = stats;
     }
 
-    abstract use(x: number, y: number): void;
+    abstract activate(): void;
 }
 

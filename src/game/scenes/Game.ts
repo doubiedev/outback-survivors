@@ -3,13 +3,14 @@ import { GameScene } from '../types/GameScene';
 import Player from '../player/Player';
 import Enemy from '../enemies/Enemy';
 import EnemySpawner from '../enemies/EnemySpawner';
+import Boomerang from '../items/Boomerang';
 
 export class Game extends Scene {
     camera: Phaser.Cameras.Scene2D.Camera;
     background: Phaser.GameObjects.Image;
 
     public player!: Player;
-    private enemySpawner!: EnemySpawner;
+    public enemySpawner!: EnemySpawner;
 
     constructor() {
         super('Game');
@@ -18,16 +19,23 @@ export class Game extends Scene {
     preload() {
         this.load.image('player', 'assets/player.png');
         this.load.image('enemy', 'assets/enemy.png');
+        this.load.image('boomerang', 'assets/boomerang.png');
     }
 
     create() {
         this.camera = this.cameras.main;
 
+        // Create the player
         this.player = new Player(this, 100, 100, 'player');
         this.add.existing(this.player);
         this.physics.add.existing(this.player);
 
+        // Create enemy spawner
         this.enemySpawner = new EnemySpawner(this as GameScene);
+
+        // Add boomerang to player inventory
+        const boomerang = new Boomerang(this, { damage: 1, knockback: 1 }, this.player);
+        this.player.addToInventory(boomerang);
 
         // Collision Enemy to Enemy
         // BUG: Enemies can overlap into each other
@@ -56,6 +64,6 @@ export class Game extends Scene {
         const player = obj1 as Player;
         const enemy = obj2 as Enemy;
 
-        player.takeDamage(enemy.dmg);
+        player.takeDamage(enemy.damage);
     }
 }

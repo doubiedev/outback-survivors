@@ -1,11 +1,14 @@
 import Phaser from 'phaser';
 import Player from '../player/Player';
-import { GameScene } from '../types/GameScene';
+import { ItemStats, StatusEffect } from '../items/Item';
+import { Game } from '../scenes/Game';
 
 export default class Enemy extends Phaser.Physics.Arcade.Sprite {
     private player!: Player;
-    public dmg: number;
+    public damage: number;
     public speed: number;
+    public hp: number = 5;
+    private activeEffects: StatusEffect[] = [];
 
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string) {
         super(scene, x, y, texture);
@@ -18,29 +21,92 @@ export default class Enemy extends Phaser.Physics.Arcade.Sprite {
         this.setBounce(1);
 
         // Cast the scene to GameScene and access the player
-        this.player = (scene as GameScene).player;
+        this.player = (scene as Game).player;
 
-        this.dmg = 1;
+        this.damage = 1;
         this.speed = 100;
     }
 
-    update() {
-        // if (distance < 24) {
-        //     this.setVelocity(0, 0);
-        //     return;
-        // }
+    update(delta: number) {
+        this.updateEffects(delta)
 
-        // const dx = this.player.x - this.x;
-        // const dy = this.player.y - this.y;
-        // const distance = Math.sqrt(dx * dx + dy * dy);
-        // const vx = (dx / distance) * this.speed;
-        // const vy = (dy / distance) * this.speed;
-        // this.setVelocity(vx, vy);
+        if (!this.isFrozen()) {
+            const angle = Phaser.Math.Angle.Between(this.x, this.y, this.player.x, this.player.y);
+            const finalSpeed = this.getModifiedSpeed();
+            this.scene.physics.velocityFromRotation(angle, finalSpeed, this.body!.velocity);
+        } else {
+            this.setVelocity(0, 0);
+        }
+    }
 
-        // NOTE: not sure if below or above is more performant
-        const angle = Phaser.Math.Angle.Between(this.x, this.y, this.player.x, this.player.y);
-        this.scene.physics.velocityFromRotation(angle, this.speed, this.body!.velocity);
+    public onHit(stats: ItemStats) {
+        this.takeDamage(stats.damage);
+        this.applyKnockback(stats.knockback);
+        this.addStatusEffects(stats.effects);
+    }
+
+    takeDamage(damage: number) {
+        this.hp -= damage;
+
+        if (this.hp <= 0) this.destroy();
+    }
+
+    applyKnockback(knockback: number) {
+        if (knockback > 0) {
+            const angle = Phaser.Math.Angle.Between(this.x, this.y, this.player.x, this.player.y);
+            this.scene.physics.velocityFromRotation(angle + Math.PI, knockback, this.body!.velocity);
+        }
+    }
+
+    addStatusEffects(effects: StatusEffect[] | undefined) {
+        if (!effects) {
+            return
+        }
+
+        const newEffects = effects.map(effect => ({
+            ...effect,
+            elapsed: 0,
+        }));
+
+        this.activeEffects.push(...newEffects);
+    }
+
+    updateEffects(delta: number) {
+        const toKeep: StatusEffect[] = [];
+
+        for (const effect of this.activeEffects) {
+            effect.elapsed = (effect.elapsed ?? 0) + delta;
+
+            switch (effect.type) {
+                case 'burn':
+                    if (effect.elapsed % 500 < delta) {
+                        this.takeDamage(effect.strength);
+                    }
+                    break;
+
+                case 'freeze':
+                    // handled in isFrozen
+                    break;
+
+                case 'slow':
+                    // handled in getModifiedSpeed
+                    break;
+            }
+
+            if (effect.elapsed < effect.duration) {
+                toKeep.push(effect);
+            }
+        }
+
+        this.activeEffects = toKeep;
+    }
+
+    isFrozen(): boolean {
+        return this.activeEffects.some(e => e.type === 'freeze');
+    }
+
+    getModifiedSpeed(): number {
+        const slow = this.activeEffects.find(e => e.type === 'slow');
+        return slow ? this.speed * (1 - slow.strength) : this.speed;
     }
 }
-
-

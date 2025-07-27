@@ -11,9 +11,10 @@ export default class EnemySpawner {
         this.enemiesList = [];
 
         this.enemyGroup = this.scene.physics.add.group({
+            classType: Enemy,
             runChildUpdate: true,
             collideWorldBounds: true,
-        });
+        }) as Phaser.Physics.Arcade.Group;
 
     }
 
